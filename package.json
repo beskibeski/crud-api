@@ -4,8 +4,8 @@
   "description": "simple crud api",
   "main": "index.ts",
   "scripts": {
-    "start:dev": "ts-node-dev src/index.ts",
-    "start:prod": "webpack --mode=production --node-env=production"
+    "start:dev": "ts-node-dev --env-file=.env src/index.ts",
+    "start:prod": "webpack --env-file=.env --mode=production --node-env=production "
   },
   "author": "beskibeski",
   "license": "ISC",
