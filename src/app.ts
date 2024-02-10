@@ -7,9 +7,9 @@ let PORT = process.env.PORT;
 
 const BASE_URL = 'api/users';
 
-const crud_api = {
+const crud_api = {  
   start(): void {
-    const server = http.createServer((req, res) => {
+    const server = http.createServer((req, res) => { 
       res.setHeader('Content-type', 'application/json');
       let url = deleteSlashes(req.url);
       switch (req.method) {
@@ -40,7 +40,15 @@ const crud_api = {
           }          
         break;
         case 'PUT':
-
+          if (url.split('/').length === 3 && url.startsWith(BASE_URL)) {
+            const userId = url.split('/')[2];
+            changeUser(res, req, userId).catch(() => {
+              showServerSideProblem(res);
+              return;
+            })
+          } else {
+            showPageNotFoundMessage(res);
+          }
         break;
         case 'DELETE':
           if (url.split('/').length === 3 && url.startsWith(BASE_URL)) {
@@ -58,7 +66,9 @@ const crud_api = {
         break;
       }
     })
-    server.listen(PORT);
+    server.listen(PORT).on('listening', () => {
+      console.log(`Server starts on ${PORT} port`);
+    });
   }
 }
 

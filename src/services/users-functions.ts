@@ -1,7 +1,7 @@
 import { showNotValidUserMessage, showUUIDNotCorrectMessage, showUserNotFoundMessage } from './create-error-responses';
 import validateUUID from './validate-uuid';
 import { ServerResponse, IncomingMessage } from 'http';
-import { users, addUserToDatabase, deleteUserFromDatabase } from '../database/users';
+import { users, addUserToDatabase, deleteUserFromDatabase, changeUserFromDatabase } from '../database/users';
 import USER from '../models/user';
 import validateUser from './validate-user';
 import createUniqID from './create-id';
@@ -49,6 +49,29 @@ const postNewUser = async (res: ServerResponse<IncomingMessage>, req: IncomingMe
 }
 
 const changeUser = async (res: ServerResponse<IncomingMessage>, req: IncomingMessage, userId: string): Promise<void> => {
+  if (validateUUID(userId)) {                   
+    for (let user of users) {    
+      if (user.id === userId) {
+        let data: string = '';
+        req.on('data', (chunk: ReadableStreamType) => {    
+          data += chunk.toString();
+        })        
+        req.on('end', () => {      
+          const newUserData: USER = JSON.parse(data);
+          changeUserFromDatabase(userId, newUserData);
+        })
+        res.writeHead(200);
+        res.end();
+        return;
+      }
+    }
+    showUserNotFoundMessage(res);
+  } else {
+    showUUIDNotCorrectMessage(res);
+  } 
+
+
+
   let data: string = '';
   req.on('data', (chunk: ReadableStreamType) => {    
     data += chunk.toString();
@@ -57,8 +80,7 @@ const changeUser = async (res: ServerResponse<IncomingMessage>, req: IncomingMes
 
 const deleteUser = async (res: ServerResponse<IncomingMessage>, userId: string): Promise<void> => {
   if (validateUUID(userId)) {                   
-    for (let user of users) {
-      console.log(user.id, userId);       
+    for (let user of users) {    
       if (user.id === userId) {
         deleteUserFromDatabase(userId);
         res.writeHead(204);

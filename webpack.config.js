@@ -1,4 +1,5 @@
 const path = require('path');
+const Dotenv = require('dotenv-webpack');
 
 const isProduction = process.env.NODE_ENV == 'production';
 
@@ -10,7 +11,8 @@ const config = {
   devServer: {
     host: '0.0.0.0',
   },
-  plugins: [   
+  plugins: [
+    new Dotenv(),   
   ],
   module: {
     rules: [
@@ -24,6 +26,7 @@ const config = {
   resolve: {
     extensions: ['.tsx', '.ts', '.jsx', '.js', '...'],
   },
+  target: 'node',
 };
 
 module.exports = () => {
