@@ -1,6 +1,15 @@
 import USER from "../models/user";
 
-const users: USER[] = [
+const addUserToDatabase = (user: USER): void => {
+  users.push(user);
+}
+
+const deleteUserFromDatabase = (userId: string): void => {
+  users = users.filter(user => user.id !== userId);
+  console.log(users);
+}
+
+let users: USER[] = [
   {
     id: 'aedeb6b6-51a3-401d-af0c-e08ee514fd78',
     username: 'alex',
@@ -9,4 +18,4 @@ const users: USER[] = [
   }
 ];
 
-export default users;
+export { users, addUserToDatabase, deleteUserFromDatabase };
