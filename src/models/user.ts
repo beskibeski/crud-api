@@ -1,8 +1,8 @@
 interface USER {
-  id?: string;
+  id: string;
   username: string;
   age: number;
-  hobbies?: string[];
+  hobbies: string[];
 }
 
 export default USER;

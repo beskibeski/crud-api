@@ -19,13 +19,6 @@ const changeUserFromDatabase = (userId: string, changedUser: USER): void => {
   })
 }
 
-let users: USER[] = [
-  {
-    id: '6fd3e088-60da-4977-9d33-6124c5dd3e7b',
-    username: 'dima',
-    age: 41,
-    hobbies: ['reading books']
-  }
-];
+let users: USER[] = [];
 
 export { users, addUserToDatabase, deleteUserFromDatabase, changeUserFromDatabase };
