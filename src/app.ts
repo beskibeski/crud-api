@@ -5,10 +5,7 @@ import { getUser, getUsers, postNewUser, changeUser, deleteUser } from './servic
 
 let PORT = process.env.PORT;
 
-const PATHS = {
-  API: 'api',
-  USERS: 'users',  
-}
+const BASE_URL = `api/users`;
 
 const crud_api = {  
   start(): void {
@@ -18,12 +15,12 @@ const crud_api = {
       console.log(url)
       switch (req.method) {
         case 'GET':
-          if (url === `${PATHS.API}/${PATHS.USERS}`) {
+          if (url === BASE_URL) {
             getUsers(res).catch(() => {
               showServerSideProblem(res);
               return;
             });
-          } else if (url.split('/').length === 3 && url.startsWith(`${PATHS.API}/${PATHS.USERS}`)) {
+          } else if (url.split('/').length === 3 && url.startsWith(BASE_URL)) {
             const userId = url.split('/')[2];
             getUser(res, userId).catch(() => {
               showServerSideProblem(res);
@@ -32,6 +29,40 @@ const crud_api = {
           } else {
             showPageNotFoundMessage(res);
           }
+        break;
+        case 'POST':          
+          if (url === BASE_URL)
+            postNewUser(res, req).catch(() => {
+              showServerSideProblem(res);
+              return;
+          });
+          else {
+            showPageNotFoundMessage(res);
+          }          
+        break;
+        case 'PUT':
+          if (url.split('/').length === 3 && url.startsWith(BASE_URL)) {
+            const userId = url.split('/')[2];
+            changeUser(res, req, userId).catch(() => {
+              showServerSideProblem(res);
+              return;
+            })
+          } else {
+            showPageNotFoundMessage(res);
+          }
+        break;
+        case 'DELETE':
+          if (url.split('/').length === 3 && url.startsWith(BASE_URL)) {
+            const userId = url.split('/')[2];
+            deleteUser(res, userId).catch(() => {
+              showServerSideProblem(res);
+              return;
+            })
+          } else {
+            showPageNotFoundMessage(res);
+          }
+        break;
+        default:          
         break;
       }        
     })
